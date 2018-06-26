@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request
 import psycopg2
 import random
+import os
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app = Flask(__name__)
 
-conn = psycopg2.connect(host = "localhost", dbname = "rolemodel", user = "marieskoczylas", port=5432)
 cur = conn.cursor()
 
 expanded_hobbies = {
