@@ -4,8 +4,9 @@ import random
 import os
 
 DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_SSL_MODE = os.environ['DATABASE_SSL_MODE']
 
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+conn = psycopg2.connect(DATABASE_URL, sslmode=DATABASE_SSL_MODE)
 
 app = Flask(__name__)
 
