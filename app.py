@@ -12,20 +12,35 @@ app = Flask(__name__)
 
 cur = conn.cursor()
 
+expanded_issues = {
+    'science': '%(science|scientific|biology|microbiology|chemistry|physics)%',
+    'math': '%(math|mathematic|calculus|statistic|algebra)%',
+    'engineering': '%(engineer|engineering|machine|mechanical|turbine|appliance)%',
+    'technology': '%(technology|tech|software|computer|fortran|turing|calculator)%',
+    'art': '%(art|artist|illustration|painting|drawing|illustrate)%',
+    'writing': '%(writing|writer|journalism|journalist|author|poem|literary)%',
+    'spanish': '%(spanish)%',
+    'economics': '%(economics|statistics|capitalism)%',
+    'history': '%(history)%',
+    'government': '%(government|politics|legal|prison)%',
+    'psychology': '%(psychology)%',
+    'anthropology': '%(anthropology)'
+}
+
 expanded_hobbies = {
     'photography': '%(photo|camera)%',
     'aviation': '%(aviation|aeronautic|airplane)%',
-    'spirituality': '%(spirituality|quaker|hebrew|jewish)%',
-    'medicine': '%(medicine|doctor|physician|gynecological|ophthalmology)%',
+    'spirituality': '%(spirituality|quaker|hebrew|jewish|spiritual)%',
+    'medicine': '%(medicine|doctor|physician|gynecological|ophthalmology|antibiotic|health|healthcare)%',
     'environment': '%(environment|sustain|conservation)%',
-    'music': '%(music|compose)%',
+    'music': '%(music|compose|singer)%',
     'movies': '%(movie|documentary|film)%',
-    'outer space': '%(space|nasa|satellite|astronaut)%',
+    'outer space': '%(space|nasa|satellite|astronaut|astronomy)%',
     'activism': '%(activism)%',
+    'gender_sexuality': '%(gynecology|gynecological|vaginal|obstetric|breast)%',
     'writing': '%(journalism|writer|author|poem|literary)%',
     'painting': '%(paint|galleries|gallery)%',
-    'fashion': '%(fashion|clothing|manicure|dressmaker|lipstick)%',
-    'sports': '%(sport|athletic)'
+    'fashion': '%(fashion|clothing|manicure|dressmaker|lipstick|underwear|undergarment|fabric|shoe|panty|stitch)'
 }
 
 @app.route('/')
@@ -46,8 +61,8 @@ def createrolemodel():
 def searchdb(issues, hobbies, location):
     clean_location = location_clean(location)
     # query the db for matches
-    cur.execute("SELECT profile_id FROM profiles WHERE topics ILIKE %s AND (topics SIMILAR TO %s OR topics SIMILAR TO %s)",
-        ('%'+issues+'%', expanded_hobbies[hobbies], clean_location))
+    cur.execute("SELECT profile_id FROM profiles WHERE topics SIMILAR TO %s AND topics SIMILAR TO %s AND topics SIMILAR TO %s",
+        (expanded_issues[issues], expanded_hobbies[hobbies], clean_location))
         #(issues, hobbies, location))
     return cur.fetchall()
 
